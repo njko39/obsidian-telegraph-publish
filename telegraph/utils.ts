@@ -58,6 +58,41 @@ function trimLineBreak(s: string): string {
 }
 
 export function elementToContentNodes(el: HTMLElement | Text, unwrapBlock: boolean|null = null, parentTag: string | null = null): Array<ContentNode> {
+	  // --- CONVERT QUOTES ---
+	  // > [!quote] 
+	  // > Text.
+	  // will convert into <aside>Text.</aside> on telegraph
+	  if (el instanceof HTMLElement) {
+		const tag = el.tagName.toLowerCase()
+
+		// Obsidian callout:
+		// <div class="callout" data-callout="quote"> ... <div class="callout-content">...</div> </div>
+		if (tag === 'div' && el.classList.contains('callout') && el.getAttribute('data-callout') === 'quote') {
+		  const contentEl = el.querySelector(':scope > .callout-content') as HTMLElement | null
+
+		  // If no content wrapper found, fallback to unwrapping children
+		  if (!contentEl) {
+			const nodes: Array<ContentNode> = []
+			for (const child of el.childNodes) {
+			  nodes.push(...elementToContentNodes(child as any, true, parentTag))
+			}
+			return nodes
+		  }
+
+		  const children: Array<ContentNode> = []
+		  // unwrapBlock=true so that <p> inside callout-content does not become a nested paragraph,
+		  // and we get clean inline content inside <aside>.
+		  for (const child of contentEl.childNodes) {
+			children.push(...elementToContentNodes(child as any, true, null))
+		  }
+
+		  return [{
+			tag: 'aside',
+			children,
+		  }]
+		}
+	  }
+	
 	if (el instanceof Text) {
 		const text = el.data
 		if (text.trim().length === 0) {
