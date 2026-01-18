@@ -1,6 +1,6 @@
 /* TODO
  * - [x] delete page (by submiting a "Deleted at" in content)
- * - [ ] upload images (as images on telegra.ph embeding directly from external website, use '![](url)' to embed image)
+ * - [ ] upload images (as images on telegra.ph embedding directly from external website, use '![](url)' to embed image)
  * - [x] handle internal links
  * - [x] handle code blocks
  * - [x] copy url to clipboard button
