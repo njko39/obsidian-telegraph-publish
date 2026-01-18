@@ -119,10 +119,13 @@ export function elementToContentNodes(el: HTMLElement | Text, unwrapBlock: boole
 			return []
 		break
 	case 'a':
-		// handle internal links
-		if (el.hasClass('internal-link')) {
-			nodeElement.attrs.href = '#'
-		}
+		// Internal links NOW are rewritten upstream (in main.ts) before we get here.
+		// Do not clobber href for <a class="internal-link">.
+		
+		// Old logic (handle internal links):
+		// if (el.hasClass('internal-link')) {
+		// 	nodeElement.attrs.href = '#'
+		// }
 		break
 	}
 
